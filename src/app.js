@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 // Middlewares
 app.use(cors());
@@ -18,5 +19,7 @@ app.get('/', (req, res) => {
 
 // TODO: Import routes nanti disini
 app.use('/api/auth', authRoutes);
+
+app.use('/api/users', userRoutes);
 
 module.exports = app;
