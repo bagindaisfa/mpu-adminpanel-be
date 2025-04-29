@@ -5,7 +5,7 @@ const createQuestion = async (req, res) => {
   const { question } = req.body;
   try {
     const query =
-      'INSERT INTO assessment_questions (question) VALUES ($1) RETURNING *';
+      'INSERT INTO assessment_questions (question_text) VALUES ($1) RETURNING *';
     const result = await pool.query(query, [question]);
     res.status(201).json(result.rows[0]);
   } catch (error) {
@@ -33,7 +33,7 @@ const updateQuestion = async (req, res) => {
   try {
     const query = `
       UPDATE assessment_questions
-      SET question = $1, updated_at = CURRENT_TIMESTAMP
+      SET question_text = $1, updated_at = CURRENT_TIMESTAMP
       WHERE id = $2
       RETURNING *`;
     const result = await pool.query(query, [question, id]);

@@ -61,6 +61,49 @@ const submitAssessment = async (req, res) => {
   }
 };
 
+const getAllAssessmentAnswers = async (req, res) => {
+  try {
+    // Ambil semua jawaban
+    const result = await pool.query(
+      `SELECT id, user_name, user_email, user_phone, answers, created_at
+       FROM assessment_answers
+       ORDER BY created_at DESC`
+    );
+
+    const questionsRes = await pool.query(
+      `SELECT id, question_text FROM assessment_questions ORDER BY id ASC`
+    );
+    const questionMap = {};
+    questionsRes.rows.forEach((q) => {
+      questionMap[q.id] = q.question_text;
+    });
+
+    const formatted = result.rows.map((entry) => {
+      const answerEntries = Object.entries(entry.answers || {});
+      const answers = answerEntries.map(([questionId, answerValue]) => ({
+        question_text:
+          questionMap[parseInt(questionId)] || `Question ${questionId}`,
+        answer: answerValue,
+      }));
+
+      return {
+        id: entry.id,
+        name: entry.user_name,
+        email: entry.user_email,
+        phone: entry.user_phone,
+        created_at: entry.created_at,
+        answers,
+      };
+    });
+
+    res.json(formatted);
+  } catch (error) {
+    console.error('Error getting assessment answers:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+};
+
 module.exports = {
+  getAllAssessmentAnswers,
   submitAssessment,
 };
