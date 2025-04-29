@@ -7,7 +7,7 @@ const createBlog = async (req, res) => {
 
   try {
     const result = await pool.query(
-      'INSERT INTO blogs (title, content, image) VALUES ($1, $2, $3) RETURNING *',
+      'INSERT INTO blogs (title, content, image_path) VALUES ($1, $2, $3) RETURNING *',
       [title, content, image]
     );
     res.status(201).json(result.rows[0]);
@@ -66,10 +66,10 @@ const updateBlog = async (req, res) => {
       return res.status(404).json({ message: 'Blog not found' });
     }
 
-    const newImage = image ? image : existing.rows[0].image;
+    const newImage = image ? image : existing.rows[0].image_path;
 
     const result = await pool.query(
-      'UPDATE blogs SET title = $1, content = $2, image = $3, updated_at = CURRENT_TIMESTAMP WHERE id = $4 RETURNING *',
+      'UPDATE blogs SET title = $1, content = $2, image_path = $3, updated_at = CURRENT_TIMESTAMP WHERE id = $4 RETURNING *',
       [title, content, newImage, id]
     );
     res.json(result.rows[0]);
