@@ -27,7 +27,7 @@ const getAllBlogs = async (req, res) => {
     const baseUrl = process.env.BASE_URL;
     const blogsWithImages = result.rows.map((blog) => ({
       ...blog,
-      image_url: `${baseUrl}/uploads/${blog.image_path}`, // Path disesuaikan
+      image_path: `${baseUrl}/${blog.image_path}`, // Path disesuaikan
     }));
 
     res.json(blogsWithImages);
