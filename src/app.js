@@ -11,7 +11,11 @@ const assessmentSubmissionRoutes = require('./routes/assessmentSubmissionRoutes'
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const visitorRoutes = require('./routes/visitorRoutes');
 
-const allowedOrigins = ['http://localhost:5173'];
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'https://admin.mpupeoplesolution.com',
+];
 
 // Middlewares
 app.use(
