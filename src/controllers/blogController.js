@@ -2,13 +2,13 @@ const pool = require('../config/db');
 
 // Create Blog
 const createBlog = async (req, res) => {
-  const { title, content } = req.body;
+  const { title, content, category } = req.body;
   const image = req.file ? req.file.path : null;
 
   try {
     const result = await pool.query(
-      'INSERT INTO blogs (title, content, image_path) VALUES ($1, $2, $3) RETURNING *',
-      [title, content, image]
+      'INSERT INTO blogs (title, content, image_path, category) VALUES ($1, $2, $3, $4) RETURNING *',
+      [title, content, image, category]
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
@@ -21,7 +21,7 @@ const createBlog = async (req, res) => {
 const getAllBlogs = async (req, res) => {
   try {
     const result = await pool.query(
-      'SELECT id, title, content, image_path, created_at FROM blogs ORDER BY created_at DESC'
+      'SELECT id, title, content, image_path, category, created_at FROM blogs ORDER BY created_at DESC'
     );
 
     const baseUrl = process.env.BASE_URL;
@@ -55,7 +55,7 @@ const getBlogById = async (req, res) => {
 // Update Blog
 const updateBlog = async (req, res) => {
   const { id } = req.params;
-  const { title, content } = req.body;
+  const { title, content, category } = req.body;
   const image = req.file ? req.file.path : null;
 
   try {
@@ -69,8 +69,8 @@ const updateBlog = async (req, res) => {
     const newImage = image ? image : existing.rows[0].image_path;
 
     const result = await pool.query(
-      'UPDATE blogs SET title = $1, content = $2, image_path = $3, updated_at = CURRENT_TIMESTAMP WHERE id = $4 RETURNING *',
-      [title, content, newImage, id]
+      'UPDATE blogs SET title = $1, content = $2, image_path = $3, category = $4, updated_at = CURRENT_TIMESTAMP WHERE id = $5 RETURNING *',
+      [title, content, newImage, category, id]
     );
     res.json(result.rows[0]);
   } catch (error) {
