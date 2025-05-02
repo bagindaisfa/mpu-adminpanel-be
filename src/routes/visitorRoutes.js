@@ -7,7 +7,7 @@ const {
 const { authenticateToken } = require('../middlewares/authMiddleware');
 
 // POST /visitors -> record visitor
-router.post('/', authenticateToken, createVisitor);
+router.post('/', createVisitor);
 
 // GET /visitors/stats -> ambil statistik visitor
 router.get('/stats', authenticateToken, getVisitorStats);

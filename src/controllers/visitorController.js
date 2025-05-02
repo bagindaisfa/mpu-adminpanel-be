@@ -3,7 +3,9 @@ const pool = require('../config/db');
 // Create visitor (record setiap buka halaman)
 const createVisitor = async (req, res) => {
   try {
-    const ip = req.ip;
+    const ip =
+      req.headers['x-forwarded-for']?.split(',')[0] ||
+      req.connection.remoteAddress;
     const userAgent = req.headers['user-agent'];
     const { page } = req.body;
 

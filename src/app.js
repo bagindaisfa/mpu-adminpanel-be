@@ -32,6 +32,7 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.set('trust proxy', true);
 
 // Static files (for uploaded images)
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
