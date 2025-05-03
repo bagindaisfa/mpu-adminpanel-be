@@ -58,6 +58,34 @@ const getBlogById = async (req, res) => {
   }
 };
 
+const getBlogNav = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const currentPost = await pool.query(`SELECT * FROM blogs WHERE id = $1`, [
+      id,
+    ]);
+    if (currentPost.rows.length === 0)
+      return res.status(404).send({ error: 'Not found' });
+
+    const prev = await pool.query(
+      `SELECT id, title FROM blogs WHERE id < $1 ORDER BY id DESC LIMIT 1`,
+      [id]
+    );
+    const next = await pool.query(
+      `SELECT id, title FROM blogs WHERE id > $1 ORDER BY id ASC LIMIT 1`,
+      [id]
+    );
+
+    res.json({
+      previous: prev.rows[0] || null,
+      next: next.rows[0] || null,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Failed to fetch blog' });
+  }
+};
+
 // Update Blog
 const updateBlog = async (req, res) => {
   const { id } = req.params;
@@ -107,6 +135,7 @@ module.exports = {
   createBlog,
   getAllBlogs,
   getBlogById,
+  getBlogNav,
   updateBlog,
   deleteBlog,
 };

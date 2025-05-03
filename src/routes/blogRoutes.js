@@ -4,6 +4,7 @@ const {
   createBlog,
   getAllBlogs,
   getBlogById,
+  getBlogNav,
   updateBlog,
   deleteBlog,
 } = require('../controllers/blogController');
@@ -14,6 +15,7 @@ const { authenticateToken } = require('../middlewares/authMiddleware');
 router.post('/', authenticateToken, upload.single('image'), createBlog);
 router.get('/', getAllBlogs);
 router.get('/:id', getBlogById);
+router.get('/nav/:id', getBlogNav);
 router.put('/:id', authenticateToken, upload.single('image'), updateBlog);
 router.delete('/:id', authenticateToken, deleteBlog);
 
