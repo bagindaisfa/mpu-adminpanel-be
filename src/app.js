@@ -10,6 +10,7 @@ const blogCommentsRoutes = require('./routes/blogCommentsRoutes');
 const assessmentSubmissionRoutes = require('./routes/assessmentSubmissionRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const visitorRoutes = require('./routes/visitorRoutes');
+const categoriesRoute = require('./routes/categoriesRoutes');
 
 const allowedOrigins = [
   'http://localhost:5173',
@@ -58,5 +59,7 @@ app.use('/api/comments', blogCommentsRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
 app.use('/api/visitors', visitorRoutes);
+
+pp.use('/api/categories', categoriesRoute);
 
 module.exports = app;
