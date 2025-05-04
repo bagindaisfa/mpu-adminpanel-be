@@ -106,6 +106,39 @@ const getBlogNav = async (req, res) => {
   }
 };
 
+const getRelatedBlogs = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query(
+      `
+      SELECT b.*, c.name AS category 
+      FROM blogs b
+      JOIN categories c ON b.category_id = c.id
+      WHERE b.category_id = (
+        SELECT category_id FROM blogs WHERE id = $1
+      )
+      AND b.id != $1
+      ORDER BY b.created_at DESC
+      LIMIT 3;
+    `,
+      [id]
+    );
+
+    const baseUrl = process.env.BASE_URL;
+    const blogsWithImages = result.rows.map((blog) => ({
+      ...blog,
+      image_path: `${baseUrl}/${blog.image_path}`, // Path disesuaikan
+    }));
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Blog not found' });
+    }
+    res.json(blogsWithImages);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Failed to fetch blog' });
+  }
+};
+
 // Update Blog
 const updateBlog = async (req, res) => {
   const { id } = req.params;
@@ -157,6 +190,7 @@ module.exports = {
   getAllBlogs,
   getBlogById,
   getBlogNav,
+  getRelatedBlogs,
   updateBlog,
   deleteBlog,
 };

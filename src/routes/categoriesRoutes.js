@@ -7,12 +7,13 @@ const {
   updateCategory,
   deleteCategory,
 } = require('../controllers/categoriesController');
+const { authenticateToken } = require('../middlewares/authMiddleware');
 
 // Endpoint: /api/categories
-router.post('/', createCategory);
+router.post('/', authenticateToken, createCategory);
 router.get('/', getAllCategories);
 router.get('/:id', getCategoryById);
-router.put('/:id', updateCategory);
-router.delete('/:id', deleteCategory);
+router.put('/:id', authenticateToken, updateCategory);
+router.delete('/:id', authenticateToken, deleteCategory);
 
 module.exports = router;

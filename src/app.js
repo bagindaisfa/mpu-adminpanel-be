@@ -60,6 +60,6 @@ app.use('/api/dashboard', dashboardRoutes);
 
 app.use('/api/visitors', visitorRoutes);
 
-pp.use('/api/categories', categoriesRoute);
+app.use('/api/categories', categoriesRoute);
 
 module.exports = app;
