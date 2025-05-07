@@ -53,8 +53,8 @@ const submitAssessment = async (req, res) => {
 
     await pool.query(
       `INSERT INTO assessment_answers (user_name, user_email, user_phone, company_name, answers)
-         VALUES ($1, $2, $3, $4)`,
-      [userName, userEmail, userPhone, answers]
+         VALUES ($1, $2, $3, $4, $5)`,
+      [userName, userEmail, userPhone, companyName, answers]
     );
 
     res.status(201).json({ message: 'Assessment submitted successfully.' });
