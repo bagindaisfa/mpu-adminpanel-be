@@ -5,6 +5,7 @@ const {
   getAllQuestions,
   updateQuestion,
   toggleVisibility,
+  getAllQuestionsCompro,
 } = require('../controllers/assessmentController');
 const { authenticateToken } = require('../middlewares/authMiddleware');
 
@@ -13,6 +14,8 @@ router.post('/', authenticateToken, createQuestion);
 
 // Get All Questions
 router.get('/', authenticateToken, getAllQuestions);
+
+router.get('/compro', getAllQuestionsCompro);
 
 // Update Question
 router.put('/:id', authenticateToken, updateQuestion);

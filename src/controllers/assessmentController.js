@@ -26,6 +26,18 @@ const getAllQuestions = async (req, res) => {
   }
 };
 
+const getAllQuestionsCompro = async (req, res) => {
+  try {
+    const query =
+      'SELECT * FROM assessment_questions WHERE is_active=true ORDER BY id ASC';
+    const result = await pool.query(query);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error getting questions:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 // Update Question
 const updateQuestion = async (req, res) => {
   const { id } = req.params;
@@ -72,4 +84,5 @@ module.exports = {
   getAllQuestions,
   updateQuestion,
   toggleVisibility,
+  getAllQuestionsCompro,
 };

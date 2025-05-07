@@ -30,13 +30,15 @@ const submitAssessment = async (req, res) => {
     let userName = null;
     let userEmail = null;
     let userPhone = null;
+    let companyName = null;
 
     if (dominantAnswer === 'yes') {
       if (
         !user_info ||
         !user_info.name ||
         !user_info.email ||
-        !user_info.phone
+        !user_info.phone ||
+        !user_info.company_name
       ) {
         return res.status(400).json({
           message:
@@ -46,10 +48,11 @@ const submitAssessment = async (req, res) => {
       userName = user_info.name;
       userEmail = user_info.email;
       userPhone = user_info.phone;
+      companyName = user_info.company_name;
     }
 
     await pool.query(
-      `INSERT INTO assessment_answers (user_name, user_email, user_phone, answers)
+      `INSERT INTO assessment_answers (user_name, user_email, user_phone, company_name, answers)
          VALUES ($1, $2, $3, $4)`,
       [userName, userEmail, userPhone, answers]
     );
@@ -65,7 +68,7 @@ const getAllAssessmentAnswers = async (req, res) => {
   try {
     // Ambil semua jawaban
     const result = await pool.query(
-      `SELECT id, user_name, user_email, user_phone, answers, created_at
+      `SELECT id, user_name, user_email, user_phone, company_name, answers, created_at
        FROM assessment_answers
        ORDER BY created_at DESC`
     );
@@ -91,6 +94,7 @@ const getAllAssessmentAnswers = async (req, res) => {
         name: entry.user_name,
         email: entry.user_email,
         phone: entry.user_phone,
+        company_name: entry.company_name,
         created_at: entry.created_at,
         answers,
       };
