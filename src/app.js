@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const path = require('path');
+const nodemailer = require('nodemailer');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const assessmentRoutes = require('./routes/assessmentRoutes');
@@ -61,5 +62,32 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/visitors', visitorRoutes);
 
 app.use('/api/categories', categoriesRoute);
+
+app.post('/api/contact', async (req, res) => {
+  const { name, email, subject, number, message } = req.body;
+
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_USER,
+      subject: `Message from ${name}: ${subject}`,
+      text: `Name: ${name}\nEmail: ${email}\nNumber: ${number}\n\nMessage:\n${message}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: 'Email sent successfully!' });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ message: 'Error sending email' });
+  }
+});
 
 module.exports = app;
