@@ -9,15 +9,30 @@ const getStats = async (req, res) => {
       'SELECT COUNT(*) FROM assessment_answers'
     );
     const visitors = await pool.query('SELECT COUNT(*) FROM visitors');
+    const contacts = await pool.query('SELECT COUNT(*) FROM contact_messages');
 
     const data = [
-      { title: 'Total Blogs', value: blogs.rows[0].count },
-      { title: 'Total Comments', value: comments.rows[0].count },
+      { title: 'Total Blogs', value: blogs.rows[0].count, route: '/blogs' },
       {
-        title: 'Total Assessments Submitted',
-        value: assessments.rows[0].count,
+        title: 'Total Comments',
+        value: comments.rows[0].count,
+        route: '/comments',
       },
-      { title: 'Total Visitors', value: visitors.rows[0].count },
+      {
+        title: 'Total Assessments',
+        value: assessments.rows[0].count,
+        route: '/assessments',
+      },
+      {
+        title: 'Total Visitors',
+        value: visitors.rows[0].count,
+        route: '/dashboard',
+      },
+      {
+        title: 'Total Contacts',
+        value: contacts.rows[0].count,
+        route: '/contacts',
+      },
     ];
 
     res.json({ data });

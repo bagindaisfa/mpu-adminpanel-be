@@ -12,6 +12,7 @@ const assessmentSubmissionRoutes = require('./routes/assessmentSubmissionRoutes'
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const visitorRoutes = require('./routes/visitorRoutes');
 const categoriesRoute = require('./routes/categoriesRoutes');
+const contactRoutes = require('./routes/contactRoutes');
 
 const allowedOrigins = [
   'http://localhost:5173',
@@ -62,6 +63,8 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/visitors', visitorRoutes);
 
 app.use('/api/categories', categoriesRoute);
+
+app.use('/api/user-contact/', contactRoutes);
 
 app.post('/api/contact', async (req, res) => {
   const { name, email, subject, number, message } = req.body;
