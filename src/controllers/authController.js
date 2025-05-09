@@ -21,7 +21,7 @@ async function login(req, res) {
       { id: user.id, username: user.username },
       process.env.JWT_SECRET,
       {
-        expiresIn: '7d',
+        expiresIn: '30m',
       }
     );
 
