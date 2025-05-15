@@ -72,10 +72,15 @@ app.post('/api/contact', async (req, res) => {
 
   try {
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'mail.mpupeoplesolution.com',
+      port: 587, // Port SMTP (biasanya 587 atau 465)
+      secure: false, // Gunakan true jika port 465
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: process.env.EMAIL_USER, // Email perusahaan Anda
+        pass: process.env.EMAIL_PASS, // Password email Anda
+      },
+      tls: {
+        rejectUnauthorized: false, // Jika Mailcow menggunakan sertifikat self-signed
       },
     });
 
