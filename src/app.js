@@ -3,6 +3,7 @@ const cors = require('cors');
 const app = express();
 const path = require('path');
 const nodemailer = require('nodemailer');
+const dayjs = require('dayjs');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const assessmentRoutes = require('./routes/assessmentRoutes');
@@ -13,6 +14,7 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const visitorRoutes = require('./routes/visitorRoutes');
 const categoriesRoute = require('./routes/categoriesRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const scheduleRoutes = require('./routes/scheduleRoutes');
 
 const allowedOrigins = [
   'http://localhost:5173',
@@ -98,5 +100,7 @@ app.post('/api/contact', async (req, res) => {
     res.status(500).json({ message: 'Error sending email' });
   }
 });
+
+app.use('/api/schedule', scheduleRoutes);
 
 module.exports = app;
