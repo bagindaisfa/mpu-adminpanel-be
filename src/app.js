@@ -14,6 +14,7 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const visitorRoutes = require('./routes/visitorRoutes');
 const categoriesRoute = require('./routes/categoriesRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const dav = require('dav');
 const scheduleRoutes = require('./routes/scheduleRoutes');
 
 const allowedOrigins = [
