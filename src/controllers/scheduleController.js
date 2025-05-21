@@ -122,4 +122,16 @@ const createSchedule = async (data) => {
   }
 };
 
-module.exports = { scheduleConsultation };
+const getAllSchedules = async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT * FROM schedule ORDER BY datetime DESC'
+    );
+    res.status(201).json(result.rows);
+  } catch (error) {
+    console.error('Error fetching schedules:', error);
+    res.status(500).json({ error: 'Failed to fetch schedules' });
+  }
+};
+
+module.exports = { scheduleConsultation, getAllSchedules };
