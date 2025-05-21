@@ -1,12 +1,12 @@
 const pool = require('../config/db');
 
 const saveContactMessage = async (req, res) => {
-  const { name, email, subject, number, message } = req.body;
+  const { name, email, subject, number, company, issues, message } = req.body;
 
   try {
     await pool.query(
-      'INSERT INTO contact_messages (name, email, subject, number, message) VALUES ($1, $2, $3, $4, $5)',
-      [name, email, subject, number, message]
+      'INSERT INTO contact_messages (name, email, subject, number, company, issues, message) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+      [name, email, subject, number, company, JSON.stringify(issues), message]
     );
     res.status(201).json({ message: 'Message saved successfully' });
   } catch (error) {
@@ -17,10 +17,9 @@ const saveContactMessage = async (req, res) => {
 
 const getAllContacts = async (req, res) => {
   try {
-    const result = await pool.query(`
-        SELECT id, name, email, subject, "number", message, created_at
-        FROM contact_messages ORDER BY created_at DESC
-      `);
+    const result = await pool.query(
+      `SELECT * FROM contact_messages ORDER BY created_at DESC`
+    );
 
     res.json(result.rows);
   } catch (error) {
