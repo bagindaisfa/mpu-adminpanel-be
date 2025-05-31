@@ -31,11 +31,32 @@ const createBlog = async (req, res) => {
 const getAllBlogs = async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT b.id, b.title, b.content, b.image_path, b.created_at, c.name AS category
+      SELECT b.id, b.title, b.content, b.image_path, b.created_at, b.is_active, c.name AS category
       FROM blogs b
       JOIN categories c ON b.category_id = c.id
       ORDER BY b.created_at DESC
     `);
+    const baseUrl = process.env.BASE_URL;
+    const blogsWithImages = result.rows.map((blog) => ({
+      ...blog,
+      image_path: `${baseUrl}/${blog.image_path}`, // Path disesuaikan
+    }));
+
+    res.json(blogsWithImages);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Failed to fetch blogs' });
+  }
+};
+
+const getAllBlogsCompro = async (req, res) => {
+  try {
+    const result =
+      await pool.query(`SELECT b.id, b.title, b.content, b.image_path, b.created_at, b.is_active, c.name AS category
+      FROM blogs b
+      JOIN categories c ON b.category_id = c.id
+      WHERE b.is_active=true
+      ORDER BY b.created_at DESC`);
     const baseUrl = process.env.BASE_URL;
     const blogsWithImages = result.rows.map((blog) => ({
       ...blog,
@@ -185,6 +206,26 @@ const deleteBlog = async (req, res) => {
   }
 };
 
+// Toggle Visibility
+const toggleVisibility = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const query = `
+      UPDATE blogs
+      SET is_active = NOT is_active, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $1
+      RETURNING *`;
+    const result = await pool.query(query, [id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Blog not found' });
+    }
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error toggling visibility:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   createBlog,
   getAllBlogs,
@@ -193,4 +234,6 @@ module.exports = {
   getRelatedBlogs,
   updateBlog,
   deleteBlog,
+  getAllBlogsCompro,
+  toggleVisibility,
 };
