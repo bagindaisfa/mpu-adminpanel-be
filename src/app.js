@@ -71,9 +71,11 @@ app.use('/api/categories', categoriesRoute);
 app.use('/api/user-contact/', contactRoutes);
 
 app.post('/api/contact', async (req, res) => {
-  const { name, email, subject, number, message } = req.body;
+  const { name, email, subject, number, company, issues, message } = req.body;
 
   try {
+    console.log('Received contact form submission:', req.body);
+
     const transporter = nodemailer.createTransport({
       host: 'mail.mpupeoplesolution.com',
       port: 587, // Port SMTP (biasanya 587 atau 465)
@@ -87,11 +89,52 @@ app.post('/api/contact', async (req, res) => {
       },
     });
 
+    const formattedIssues = Array.isArray(issues)
+      ? issues.map((issue, index) => `  ${index + 1}. ${issue}`).join('\n')
+      : issues;
+
+    // const emailBody = `
+    //   Name     : ${name}
+    //   Email    : ${email}
+    //   Phone    : ${number}
+    //   Company  : ${company}
+    //   Subject  : ${subject}
+
+    //   Issues:
+    //   ${formattedIssues}
+
+    //   Message:
+    //   ${message}
+    //     `.trim();
+
+    const emailBody =
+      'Name     : ' +
+      name +
+      '\n' +
+      'Email    : ' +
+      email +
+      '\n' +
+      'Phone    : ' +
+      number +
+      '\n' +
+      'Company  : ' +
+      company +
+      '\n' +
+      'Subject  : ' +
+      subject +
+      '\n\n' +
+      'Issues:\n' +
+      (Array.isArray(issues)
+        ? issues.map((issue, i) => `  ${i + 1}. ${issue}`).join('\n')
+        : issues) +
+      '\n\nMessage:\n' +
+      message;
+
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: process.env.EMAIL_USER,
       subject: `Message from ${name}: ${subject}`,
-      text: `Name: ${name}\nEmail: ${email}\nNumber: ${number}\n\nMessage:\n${message}`,
+      text: emailBody,
     };
 
     await transporter.sendMail(mailOptions);
